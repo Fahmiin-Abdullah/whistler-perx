@@ -9,6 +9,7 @@ class TransactionsController < ApplicationController
       PointsRecord.create!(user: @user, transaction_id: transaction.id, amount: points, description: transaction_params[:description])
       @user.points_cached += points
       @user.save!
+      RewardsService.new(@user).issue_rewards
     end
 
     render json: 'Transaction processed successfully!', status: :ok
