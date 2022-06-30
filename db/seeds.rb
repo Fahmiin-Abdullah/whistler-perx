@@ -5,3 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+User.create(name: 'Fahmiin', birthdate: Date.current)
+
+Reward.create(name: 'Free Coffee', description: 'Get 1 FREE coffee')
+Reward.create(name: '5% Cash Rebate', description: 'Get 5% cash rebate')
+Reward.create(name: 'Free Movie Tickets', description: 'Get FREE movie tickets')
+Reward.create(name: 'Airport Lounge Access', description: 'Get FREE access to airport lounge')
