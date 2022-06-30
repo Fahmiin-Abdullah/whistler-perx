@@ -5,7 +5,8 @@ class TransactionsController < ApplicationController
   def create
     points = PointsService.new(transaction_params[:currency], transaction_params[:amount]).calculate_points
     @user.with_lock do
-      Transaction.create!(transaction_params)
+      transaction = Transaction.create!(transaction_params)
+      PointsRecord.create!(user: @user, transaction_id: transaction.id, amount: points, description: transaction_params[:description])
       @user.points_cached += points
       @user.save!
     end
