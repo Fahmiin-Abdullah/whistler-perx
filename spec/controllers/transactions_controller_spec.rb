@@ -2,6 +2,9 @@ require 'rails_helper'
 
 RSpec.describe TransactionsController, type: :controller do
   let(:user) { create(:user) }
+  let!(:reward_1) { create(:reward, name: 'Free Coffee') }
+  let!(:reward_2) { create(:reward, name: '5% Cash Rebate') }
+  let!(:reward_3) { create(:reward, name: 'Free Movie Tickets') }
 
   describe '#create' do
     context 'when valid params' do
