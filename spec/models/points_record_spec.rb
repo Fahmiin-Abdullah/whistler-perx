@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe Transaction, type: :model do
+RSpec.describe PointsRecord, type: :model do
   describe '#associations' do
     it { should belong_to(:user) }
-    it { should have_many(:points_records) }
+    it { should belong_to(:transaction_record) }
   end
 end

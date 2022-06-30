@@ -13,6 +13,7 @@ RSpec.describe TransactionsController, type: :controller do
 
           transaction = Transaction.first
           user.reload
+
           expect(transaction.amount).to eq(100)
           expect(transaction.currency).to eq('SGD')
           expect(transaction.description).to eq('New purchase')
@@ -28,11 +29,28 @@ RSpec.describe TransactionsController, type: :controller do
 
           transaction = Transaction.first
           user.reload
+
           expect(transaction.amount).to eq(100)
           expect(transaction.currency).to eq('BND')
           expect(transaction.description).to eq('New purchase')
           expect(user.points_cached).to eq(20)
         end
+      end
+
+      it 'create point records' do
+        expect do
+          post :create, params: { user_id: user.id, currency: 'SGD', amount: 100, description: 'New purchase' }
+        end.to change { Transaction.count }.by(1).
+        and change { PointsRecord.count }.by(1)
+
+        transaction = Transaction.first
+        points_record = PointsRecord.first
+        user.reload
+
+        expect(points_record.user).to eq(user)
+        expect(points_record.transaction_id).to eq(transaction.id)
+        expect(points_record.amount).to eq(10)
+        expect(points_record.description).to eq('New purchase')
       end
     end
   end
