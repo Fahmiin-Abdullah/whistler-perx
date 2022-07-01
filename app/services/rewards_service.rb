@@ -1,12 +1,15 @@
 class RewardsService
+  POINTS_REWARDS = %i[free_coffee cash_rebate free_movie_tickets]
+  TIER_REWARDS = %i[airport_loungue_access]
+
   def initialize(user)
     @user = user
   end
 
   def issue_rewards
-    award_free_coffee
-    award_cash_rebate
-    award_free_movie_tickets
+    POINTS_REWARDS.each do |reward|
+      send("award_#{reward.to_s}")
+    end
   end
 
   def award_free_coffee
@@ -15,7 +18,7 @@ class RewardsService
     return if Claim.reward_claimed?(@user, free_coffee_reward, award_description)
     return unless PointsRecord.where('user_id = ? AND created_at >= ?', @user.id, DateTime.current.beginning_of_month).sum(:amount) >= 100
 
-    Claim.create!(user: @user, reward: free_coffee_reward, description: award_description)
+    award(free_coffee_reward, award_description)
   end
 
   def award_cash_rebate
@@ -24,7 +27,7 @@ class RewardsService
     return if Claim.reward_claimed?(@user, cash_rebate_reward, award_description)
     return unless Transaction.where('user_id = ? AND amount > ?', @user.id, 100).count >= 10
 
-    Claim.create!(user: @user, reward: cash_rebate_reward, description: award_description)
+    award(cash_rebate_reward, award_description)
   end
 
   def award_free_movie_tickets
@@ -36,12 +39,17 @@ class RewardsService
     return unless first_transaction.present? && first_transaction.created_at > 60.days.ago
     return unless Transaction.where('user_id = ? AND created_at >= ?', @user.id, first_transaction.created_at).sum(:amount) > 1000
 
-    Claim.create!(user: @user, reward: free_movie_tickets_reward, description: award_description)
+    award(free_movie_tickets_reward, award_description)
   end
 
   def award_airport_lounge_access
     award_description = 'Upgraded to Gold tier'
     airport_lounge_access_reward = Reward.find_by_name('Airport Lounge Access')
-    Claim.create!(user: @user, reward: airport_lounge_access_reward, description: award_description)
+
+    award(airport_lounge_access_reward, award_description)
+  end
+
+  def award(reward, description)
+    Claim.create!(user: @user, reward: reward, description: description)
   end
 end
