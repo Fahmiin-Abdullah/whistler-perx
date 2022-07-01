@@ -1,6 +1,13 @@
 class RewardsService
+  # ==============================================================================
+  # All methods related to checking elligibility and issuing rewards.
+  # Each method have guard clauses that checks for uer eligbility to attain reward.
+  #
+  # Made use of the claim.description field to check for uniqueness of claims.
+  # So these rewards can only be claimed only once.
+  # ==============================================================================
+
   POINTS_REWARDS = %i[free_coffee cash_rebate free_movie_tickets]
-  TIER_REWARDS = %i[airport_loungue_access]
 
   def initialize(user)
     @user = user

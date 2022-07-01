@@ -1,6 +1,13 @@
 class QuarterlyBonusPointsWorker
   include Sidekiq::Worker
 
+  # ==============================================================================
+  # Accepts:
+  # N/A
+  #
+  # Query transaction sums made in the last quarter and grouped by users.
+  # If user spent more than $2000, award bonus points.
+  # ==============================================================================
   def perform
     Transaction.includes(:user)
                .where('transactions.created_at > ?', 3.months.ago.beginning_of_day)

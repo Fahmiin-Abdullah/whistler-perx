@@ -1,3 +1,7 @@
+# ==============================================================================
+  # Schedule for workers.
+  # Quarterly bonus is run on 30th of June, Sept and on 32st for Mar, Dec
+  # ==============================================================================
 monthly_birthday_reward_worker:
   cron: "0 0 1 * *"
   class: 'MonthlyBirthdayRewardWorker'

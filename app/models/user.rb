@@ -7,6 +7,10 @@ class User < ApplicationRecord
 
   after_save :recalculate_tier
 
+  # ==============================================================================
+  # Recalculate points and updates new tier on user if any changes
+  # If user upgrades to gold tier, award 4x Airport Lounge Access rewards
+  # ==============================================================================
   def recalculate_tier
     prev_highest_points = points_archives.pluck(:total).last(2).max || 0
     tier_points = prev_highest_points + points_cached

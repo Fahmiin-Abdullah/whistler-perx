@@ -2,9 +2,9 @@ class TransactionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    TransactionWorker.perform_async(transaction_params[:user_id],
+    TransactionWorker.perform_async(transaction_params[:user_id].to_i,
                                     transaction_params[:currency],
-                                    transaction_params[:amount],
+                                    transaction_params[:amount].to_f,
                                     transaction_params[:description])
 
     render json: 'Transaction processed!', status: :ok
