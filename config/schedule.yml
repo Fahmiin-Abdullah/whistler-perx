@@ -1,0 +1,12 @@
+monthly_birthday_reward_worker:
+  cron: "0 0 1 * *"
+  class: 'MonthlyBirthdayRewardWorker'
+30th_quarterly_bonus_points_worker:
+  cron: "0 0 30 6,9 *"
+  class: 'QuarterlyBonusPointsWorker'
+31st_quarterly_bonus_points_worker:
+  cron: "0 0 31 3,12 *"
+  class: 'QuarterlyBonusPointsWorker'
+yearly_points_expiry_worker:
+  cron: "0 0 1 1 *"
+  class: 'YearlyPointsExpiryWorker'
