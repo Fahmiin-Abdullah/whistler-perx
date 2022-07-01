@@ -5,6 +5,7 @@ RSpec.describe TransactionsController, type: :controller do
   let!(:reward_1) { create(:reward, name: 'Free Coffee') }
   let!(:reward_2) { create(:reward, name: '5% Cash Rebate') }
   let!(:reward_3) { create(:reward, name: 'Free Movie Tickets') }
+  let!(:reward_4) { create(:reward, name: 'Airport Lounge Access') }
 
   describe '#create' do
     context 'when valid params' do
@@ -54,6 +55,30 @@ RSpec.describe TransactionsController, type: :controller do
         expect(points_record.transaction_id).to eq(transaction.id)
         expect(points_record.amount).to eq(10)
         expect(points_record.description).to eq('New purchase')
+      end
+
+      context 'when user upgrades to gold' do
+        before { user.update_columns(points_cached: 990) }
+
+        it 'awards 4x airport lounge access reward' do
+          expect do
+            post :create, params: { user_id: user.id, currency: 'SGD', amount: 100, description: 'New purchase' }
+          end.to change { user.reload.rewards.count }.by(4)
+
+          expect(user.tier).to eq('gold')
+        end
+      end
+
+      context 'when user does not upgrade' do
+        before { user.update_columns(points_cached: 90) }
+
+        it 'does not issue anything' do
+          expect do
+            post :create, params: { user_id: user.id, currency: 'SGD', amount: 100, description: 'New purchase' }
+          end.to change { user.reload.rewards.count }.by(0)
+
+          expect(user.tier).to eq('standard')
+        end
       end
     end
   end

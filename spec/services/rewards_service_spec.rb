@@ -5,6 +5,7 @@ RSpec.describe RewardsService, type: :service do
   let!(:reward_1) { create(:reward, name: 'Free Coffee') }
   let!(:reward_2) { create(:reward, name: '5% Cash Rebate') }
   let!(:reward_3) { create(:reward, name: 'Free Movie Tickets') }
+  let!(:reward_4) { create(:reward, name: 'Airport Lounge Access') }
 
   describe '::award_free_coffee' do
     context 'when user accumulates > 100 points in a month' do
@@ -53,7 +54,7 @@ RSpec.describe RewardsService, type: :service do
     context 'when user spent > $1000 within 60 days' do
       let!(:transactions) { create_list(:transaction, 10, user: user, amount: 200) }
 
-      it 'issues cash rebate reward' do
+      it 'issues free movies ticket reward' do
         expect do
           RewardsService.new(user).award_free_movie_tickets
         end.to change {
@@ -77,6 +78,16 @@ RSpec.describe RewardsService, type: :service do
       it 'issues no rewards' do
         expect { RewardsService.new(user).award_free_movie_tickets }.not_to change { Claim.count }
       end
+    end
+  end
+
+  describe '::award_airport_lounge_access' do
+    it 'issues airport lounge access reward' do
+      expect do
+        RewardsService.new(user).award_airport_lounge_access
+      end.to change {
+        Claim.exists?(user_id: user.id, reward_id: reward_4.id, description: 'Upgraded to Gold tier')
+      }.to(true)
     end
   end
 end
