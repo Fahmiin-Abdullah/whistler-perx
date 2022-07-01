@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_30_144726) do
+ActiveRecord::Schema.define(version: 2022_07_01_161631) do
 
   create_table "claims", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2022_06_30_144726) do
 
   create_table "points_records", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.integer "transaction_id", null: false
+    t.integer "transaction_id"
     t.integer "amount", default: 0
     t.text "description"
     t.string "action", default: "credit"
