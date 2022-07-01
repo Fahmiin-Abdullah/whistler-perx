@@ -38,4 +38,10 @@ class RewardsService
 
     Claim.create!(user: @user, reward: free_movie_tickets_reward, description: award_description)
   end
+
+  def award_airport_lounge_access
+    award_description = 'Upgraded to Gold tier'
+    airport_lounge_access_reward = Reward.find_by_name('Airport Lounge Access')
+    Claim.create!(user: @user, reward: airport_lounge_access_reward, description: award_description)
+  end
 end
